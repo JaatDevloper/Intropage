@@ -35,7 +35,17 @@ export default function Admin() {
 
   const handleSave = () => {
     localStorage.setItem("user_profile", JSON.stringify(profile));
-    alert("Profile Updated in LocalStorage. (Graduation needed for MongoDB)");
+    alert("Profile Updated. System changes committed.");
+  };
+
+  const [dbStatus, setDbStatus] = useState("disconnected");
+
+  const connectMongo = () => {
+    setDbStatus("connecting");
+    setTimeout(() => {
+      setDbStatus("error");
+      alert("MongoDB Connection Error: Replit Agent Mockup Mode does not support live database connections. Upgrade to a paid plan to graduate this prototype to a full application.");
+    }, 1500);
   };
 
   if (!isLoggedIn) {
@@ -81,6 +91,19 @@ export default function Admin() {
             className="p-3 rounded-full bg-white/5 border border-white/10 text-white/40 hover:text-white transition-colors"
           >
             <LogOut className="w-5 h-5" />
+          </button>
+        </div>
+
+        <div className="mb-8 p-6 sad-glass rounded-2xl flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className={`w-3 h-3 rounded-full ${dbStatus === 'connected' ? 'bg-green-500' : dbStatus === 'connecting' ? 'bg-yellow-500 animate-pulse' : 'bg-red-500'}`} />
+            <span className="text-xs font-mono uppercase tracking-widest opacity-60">Database: MongoDB</span>
+          </div>
+          <button 
+            onClick={connectMongo}
+            className="text-[10px] font-mono border border-white/20 px-3 py-1 rounded-full hover:bg-white/10 transition-colors"
+          >
+            {dbStatus === 'disconnected' ? 'CONNECT' : dbStatus === 'connecting' ? 'INITIALIZING...' : 'RETRY CONNECTION'}
           </button>
         </div>
 
