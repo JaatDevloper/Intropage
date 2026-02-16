@@ -1,9 +1,26 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Typewriter } from "react-simple-typewriter";
 import { Github, Instagram, Twitter, HeartCrack, MapPin } from "lucide-react";
 import heroImg from "@assets/cc6cebd358b25e2101927d75365c447f_1771252558044.jpg";
 
+// Mock Database - In reality this would be on a server
+const DEFAULT_PROFILE = {
+  name: "INSANE",
+  bio: "Jaat paida nahi hote, system hila dete hain... par kabhi kabhi system khud hi hil jata hai.",
+  profilePic: heroImg, // Default to local asset
+  coverPic: heroImg,
+  followers: "22.2K",
+  following: "500"
+};
+
 export default function Hero() {
+  // Load profile from LocalStorage if it exists
+  const [profile, setProfile] = useState(() => {
+    const saved = localStorage.getItem("user_profile");
+    return saved ? JSON.parse(saved) : DEFAULT_PROFILE;
+  });
+
   return (
     <section className="relative w-full min-h-screen flex flex-col items-center justify-center p-6 bg-background grain-bg">
       <div className="absolute top-0 w-full h-full bg-gradient-to-b from-black/0 via-black/20 to-background pointer-events-none" />
@@ -17,8 +34,8 @@ export default function Hero() {
         {/* Profile Banner */}
         <div className="relative h-64 overflow-hidden">
           <img 
-            src={heroImg} 
-            alt="Anime Sad Profile" 
+            src={profile.coverPic} 
+            alt="Cover" 
             className="w-full h-full object-cover grayscale-img opacity-80"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
@@ -26,11 +43,11 @@ export default function Hero() {
           {/* Badge Overlay */}
           <div className="absolute bottom-6 left-8 flex items-center gap-3">
             <div className="w-20 h-20 rounded-full border-4 border-background bg-card flex items-center justify-center overflow-hidden">
-              <img src={heroImg} className="grayscale-img scale-150" />
+              <img src={profile.profilePic} className="grayscale-img scale-150" />
             </div>
             <div className="mb-2">
               <h2 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-                INSANE <HeartCrack className="w-4 h-4 text-white/40" />
+                {profile.name} <HeartCrack className="w-4 h-4 text-white/40" />
               </h2>
               <p className="text-white/60 text-sm font-mono tracking-widest uppercase">Broken Core</p>
             </div>
@@ -60,16 +77,16 @@ export default function Hero() {
           </div>
 
           <p className="text-white/60 text-sm leading-relaxed mb-8 italic">
-            "Jaat paida nahi hote, system hila dete hain... par kabhi kabhi system khud hi hil jata hai."
+            "{profile.bio}"
           </p>
 
           <div className="flex gap-8 mb-8 border-y border-white/5 py-6">
             <div className="text-center">
-              <p className="text-xl font-bold text-white tracking-tight">500</p>
+              <p className="text-xl font-bold text-white tracking-tight">{profile.following}</p>
               <p className="text-[10px] text-white/30 uppercase tracking-widest">Following</p>
             </div>
             <div className="text-center">
-              <p className="text-xl font-bold text-white tracking-tight">22.2K</p>
+              <p className="text-xl font-bold text-white tracking-tight">{profile.followers}</p>
               <p className="text-[10px] text-white/30 uppercase tracking-widest">Followers</p>
             </div>
             <div className="text-center">
